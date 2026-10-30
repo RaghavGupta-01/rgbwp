@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Layout } from './components/Layout';
 import { DecisionView } from './pages/DecisionView';
+import { AccuracyView } from './pages/AccuracyView';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,6 +17,8 @@ const queryClient = new QueryClient({
 export const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'decision' | 'accuracy'>('decision');
   const [deliveryDate, setDeliveryDate] = useState<string>('2026-01-02');
+  const [dateFrom, setDateFrom] = useState<string>('2026-01-02');
+  const [dateTo, setDateTo] = useState<string>('2026-02-01');
   const [cutoffTime, setCutoffTime] = useState<string>('09:00');
 
   return (
@@ -32,10 +35,14 @@ export const AppContent: React.FC = () => {
           onCutoffTimeChange={setCutoffTime}
         />
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center text-slate-500">
-          <h2 className="text-lg font-semibold text-slate-800">Forecast Accuracy Analytics</h2>
-          <p className="text-sm mt-1">Accuracy KPIs and distribution charts will render here.</p>
-        </div>
+        <AccuracyView
+          dateFrom={dateFrom}
+          onDateFromChange={setDateFrom}
+          dateTo={dateTo}
+          onDateToChange={setDateTo}
+          cutoffTime={cutoffTime}
+          onCutoffTimeChange={setCutoffTime}
+        />
       )}
     </Layout>
   );
