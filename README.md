@@ -1,39 +1,81 @@
 # GB Wind Forecast Decision Portal
 
-A web application designed for a UK energy utility's day-ahead power buying team to optimize procurement decisions under wind forecast uncertainty.
+A day-ahead wind forecast decision portal for the GB power buying desk, visualizing decision-time forecasts and evaluating historical accuracy against actual outturn.
 
 ---
 
-## 1. Overview & Purpose
-
-The day-ahead trading team purchases power on day **D-1** for delivery across day **D**. Because wind generation is weather-dependent and variable, accurate day-ahead purchasing requires:
-1. **Decision-Time Forecast Visibility**: Clearly presenting the latest wind generation forecast published prior to the daily decision cutoff time.
-2. **Quantitative Accuracy Evaluation**: Evaluating historical forecast error against outturn actuals to establish empirical error buffers and procurement risk bounds.
-
-### Time & Data Scope
-- **Decision Window**: Purchase decisions made between **2026-01-01 and 2026-01-31** (D-1).
-- **Delivery Days**: Electricity delivery dates from **2026-01-02 to 2026-02-01** (D).
-
-- **Data Source**: Exclusively national-level GB wind from Elexon BMRS:
-  - Half-hourly actual wind generation (`FUELHH` stream, `fuelType=WIND`).
-  - Hourly wind generation forecasts (`WINDFOR` stream).
+## Deployed Application
+- **Live Application Link**: TBA
 
 ---
 
-## 2. Repository Layout
+## Files and Directories Overview
 
 ```
-.
-├── README.md              # Project overview, quickstart, assumptions, and AI disclosure
-├── docker-compose.yml     # One-command containerized local startup
-├── .github/workflows/     # CI pipeline (lint, test, build)
-├── backend/               # FastAPI service, domain calculations, ingestion pipeline, tests
-├── frontend/              # Vite + React 18 + TypeScript web client
-└── docs/                  # Architecture notes, system diagrams, and data findings
+wind-forecast-portal/
+├── docker-compose.yml          # One-command containerized local orchestration
+├── .github/workflows/ci.yml    # GitHub Actions CI workflow (lint, test, build)
+├── docs/
+│   └── architecture.md         # System architecture, empirical data findings, and methodology
+├── backend/
+│   ├── Dockerfile              # Production Python 3.12-slim container
+│   ├── pyproject.toml          # FastAPI dependencies, ruff, and pytest configuration
+│   ├── app/
+│   │   ├── main.py             # FastAPI entrypoint with CORS middleware
+│   │   ├── config.py           # Configurable date ranges, cutoff defaults, and paths
+│   │   ├── schemas.py          # Pydantic v2 response schemas
+│   │   ├── api/routes.py       # REST API endpoints for metadata, forecasts, and metrics
+│   │   ├── services/           # In-memory data store, decision logic, and error metrics
+│   │   └── core/time_utils.py  # London/UTC timezone conversions and cutoff logic
+│   ├── data/                   # Committed Parquet snapshots (actuals.parquet, forecasts.parquet)
+│   ├── ingestion/              # Elexon BMRS client, cleaning, and snapshot generation CLI
+│   └── tests/                  # Unit and integration test suite (domain, ingestion, API)
+└── frontend/
+    ├── Dockerfile              # Multi-stage container with inlined Nginx SPA proxy
+    ├── package.json            # React, TypeScript, TanStack Query, ECharts, Tailwind CSS
+    └── src/
+        ├── App.tsx             # Root component and navigation state
+        ├── api/                # Typed REST client and React Query hooks
+        ├── components/         # Layout, ControlsBar, KpiCard, and ECharts visualizations
+        └── pages/              # DecisionView ("Tomorrow's View") and AccuracyView
 ```
 
 ---
 
-## 3. AI Assistance Disclosure
+## How to Start the Application
 
-As required by the project specification, AI-assisted development tools were utilized during the development of this codebase to accelerate scaffolding, documentation, and test implementation. All domain logic, calculations, and architectural choices have been rigorously validated against project requirements.
+### Option 1: With Docker (Recommended)
+From the repository root:
+```bash
+docker compose up --build
+```
+- **Web Portal**: `http://localhost:5173`
+- **API & Docs**: `http://localhost:8000/docs`
+
+*(Runs fully offline using the committed Parquet snapshot; no external database or API key required).*
+
+### Option 2: Without Docker
+
+#### 1. Backend (Python 3.10+)
+```bash
+cd backend
+python -m venv .venv
+
+# Activate virtual environment
+# Windows:
+.venv\Scripts\activate
+# macOS/Linux:
+source .venv/bin/activate
+
+pip install -e ".[dev]"
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+```
+API runs on `http://127.0.0.1:8000`.
+
+#### 2. Frontend (Node.js 20+)
+```bash
+cd frontend
+npm ci
+npm run dev
+```
+Open `http://localhost:5173` in your browser.
