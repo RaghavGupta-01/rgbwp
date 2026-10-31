@@ -10,11 +10,13 @@ import {
 import { ControlsBar } from '../components/ControlsBar';
 import { KpiCard } from '../components/KpiCard';
 import { DailyErrorChart } from '../components/charts/DailyErrorChart';
+import { HourOfDayChart } from '../components/charts/HourOfDayChart';
 import { HorizonDecayChart } from '../components/charts/HorizonDecayChart';
 import { ErrorHistogram } from '../components/charts/ErrorHistogram';
 import { LevelBreakdownChart } from '../components/charts/LevelBreakdownChart';
 import {
   useByHorizonMetrics,
+  useByHourMetrics,
   useByLevelMetrics,
   useDailyMetrics,
   useHourlyErrors,
@@ -38,32 +40,69 @@ export const AccuracyView: React.FC<AccuracyViewProps> = ({
   cutoffTime,
   onCutoffTimeChange,
 }) => {
-  const { data: summary, isLoading: isSummaryLoading } = useSummaryMetrics(
-    dateFrom,
-    dateTo,
-    cutoffTime
-  );
-  const { data: dailyData, isLoading: isDailyLoading } = useDailyMetrics(
-    dateFrom,
-    dateTo,
-    cutoffTime
-  );
-  const { data: horizonData, isLoading: isHorizonLoading } = useByHorizonMetrics();
-  const { data: levelData, isLoading: isLevelLoading } = useByLevelMetrics(
-    dateFrom,
-    dateTo,
-    cutoffTime
-  );
-  const { data: errorRows, isLoading: isErrorsLoading } = useHourlyErrors(
-    dateFrom,
-    dateTo,
-    cutoffTime
-  );
+  const {
+    data: summary,
+    isLoading: isSummaryLoading,
+    error: summaryError,
+    refetch: refetchSummary,
+  } = useSummaryMetrics(dateFrom, dateTo, cutoffTime);
+
+  const {
+    data: dailyData,
+    isLoading: isDailyLoading,
+    error: dailyError,
+    refetch: refetchDaily,
+  } = useDailyMetrics(dateFrom, dateTo, cutoffTime);
+
+  const {
+    data: byHourData,
+    isLoading: isByHourLoading,
+    error: byHourError,
+    refetch: refetchByHour,
+  } = useByHourMetrics(dateFrom, dateTo, cutoffTime);
+
+  const {
+    data: horizonData,
+    isLoading: isHorizonLoading,
+    error: horizonError,
+    refetch: refetchHorizon,
+  } = useByHorizonMetrics();
+
+  const {
+    data: levelData,
+    isLoading: isLevelLoading,
+    error: levelError,
+    refetch: refetchLevel,
+  } = useByLevelMetrics(dateFrom, dateTo, cutoffTime);
+
+  const {
+    data: errorRows,
+    isLoading: isErrorsLoading,
+    error: errorsError,
+    refetch: refetchErrors,
+  } = useHourlyErrors(dateFrom, dateTo, cutoffTime);
 
   const isLoading =
-    isSummaryLoading || isDailyLoading || isHorizonLoading || isLevelLoading || isErrorsLoading;
+    isSummaryLoading ||
+    isDailyLoading ||
+    isByHourLoading ||
+    isHorizonLoading ||
+    isLevelLoading ||
+    isErrorsLoading;
 
-  if (isLoading || !summary) {
+  const hasError =
+    Boolean(summaryError || dailyError || byHourError || horizonError || levelError || errorsError);
+
+  const handleRetryAll = () => {
+    refetchSummary();
+    refetchDaily();
+    refetchByHour();
+    refetchHorizon();
+    refetchLevel();
+    refetchErrors();
+  };
+
+  if (isLoading) {
     return (
       <div className="space-y-4 animate-pulse">
         <div className="h-16 bg-slate-200 rounded-xl"></div>
@@ -73,6 +112,25 @@ export const AccuracyView: React.FC<AccuracyViewProps> = ({
           ))}
         </div>
         <div className="h-80 bg-slate-200 rounded-xl"></div>
+      </div>
+    );
+  }
+
+  if (hasError || !summary) {
+    return (
+      <div className="p-8 bg-rose-50 border border-rose-200 rounded-xl text-center text-rose-800">
+        <AlertCircle className="w-8 h-8 mx-auto text-rose-500 mb-2" />
+        <h3 className="font-semibold text-lg">Unable to load forecast accuracy metrics</h3>
+        <p className="text-sm mt-1 text-rose-600">
+          Failed to fetch accuracy evaluation data for the selected parameters.
+        </p>
+        <button
+          type="button"
+          onClick={handleRetryAll}
+          className="mt-4 inline-flex items-center px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-sm font-medium shadow-sm transition"
+        >
+          Retry
+        </button>
       </div>
     );
   }
@@ -176,7 +234,11 @@ export const AccuracyView: React.FC<AccuracyViewProps> = ({
       {dailyData && <DailyErrorChart data={dailyData} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {byHourData && <HourOfDayChart data={byHourData} />}
         {horizonData && <HorizonDecayChart data={horizonData} />}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {errorRows && (
           <ErrorHistogram
             data={errorRows}
@@ -184,9 +246,8 @@ export const AccuracyView: React.FC<AccuracyViewProps> = ({
             signedP90={summary.signed_p90}
           />
         )}
+        {levelData && <LevelBreakdownChart data={levelData} />}
       </div>
-
-      {levelData && <LevelBreakdownChart data={levelData} />}
     </div>
   );
 };

@@ -29,6 +29,7 @@ export const DecisionView: React.FC<DecisionViewProps> = ({
     data: decisionData,
     isLoading: isDecisionLoading,
     error: decisionError,
+    refetch: refetchDecision,
   } = useDecisionForecast(deliveryDate, cutoffTime);
 
   const {
@@ -58,6 +59,13 @@ export const DecisionView: React.FC<DecisionViewProps> = ({
         <p className="text-sm mt-1 text-rose-600">
           {(decisionError as Error)?.message || 'No forecast records found for this date.'}
         </p>
+        <button
+          type="button"
+          onClick={() => refetchDecision()}
+          className="mt-4 inline-flex items-center px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-sm font-medium shadow-sm transition"
+        >
+          Retry
+        </button>
       </div>
     );
   }
