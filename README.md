@@ -5,7 +5,8 @@ A day-ahead wind forecast decision portal for the GB power buying desk, visualiz
 ---
 
 ## Deployed Application
-- **Live Application Link**: TBA
+- **Live Web Portal**: [https://rgbwp.vercel.app](https://rgbwp.vercel.app/)
+- **API Health Check**: [https://rgbwp.vercel.app/api/health](https://rgbwp.vercel.app/api/health)
 
 ---
 
