@@ -49,7 +49,7 @@ From the repository root:
 ```bash
 docker compose up --build
 ```
-- **Web Portal**: `http://localhost:5173`
+- **Web Portal**: `http://localhost:5173` (or `http://localhost:3000`)
 - **API & Docs**: `http://localhost:8000/docs`
 
 *(Runs fully offline using the committed Parquet snapshot; no external database or API key required).*
@@ -79,3 +79,8 @@ npm ci
 npm run dev
 ```
 Open `http://localhost:5173` in your browser.
+
+---
+
+## AI Assistance Disclosure
+AI-assisted tools were utilized during development for project scaffolding, architectural validation, and test automation. All domain logic, calculations, and code were manually verified against Elexon BMRS specifications.
