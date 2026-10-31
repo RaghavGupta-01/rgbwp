@@ -12,27 +12,20 @@ export const LevelBreakdownChart: React.FC<LevelBreakdownChartProps> = ({ data }
   const biases = data.map((d) => d.bias);
 
   const option = {
-    title: {
-      text: 'Error by Generation Level',
-      subtext: 'Analyzing accuracy and bias as actual wind generation increases.',
-      left: 10,
-      textStyle: { fontSize: 14, fontWeight: 'bold', color: '#0f172a' },
-      subtextStyle: { fontSize: 12, color: '#64748b' },
-    },
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'shadow' },
     },
     legend: {
       data: ['MAE', 'Bias'],
-      top: 35,
-      right: 20,
+      top: 0,
+      right: 10,
     },
     grid: {
       left: '3%',
       right: '4%',
       bottom: '8%',
-      top: '20%',
+      top: '40px',
       containLabel: true,
     },
     xAxis: {
@@ -44,7 +37,13 @@ export const LevelBreakdownChart: React.FC<LevelBreakdownChartProps> = ({ data }
     },
     yAxis: {
       type: 'value',
-      name: 'Error (MW)',
+      name: 'MW',
+      nameTextStyle: {
+        color: '#64748b',
+        fontSize: 12,
+        align: 'right',
+        padding: [0, 8, 0, 0],
+      },
       splitLine: { lineStyle: { color: '#f1f5f9' } },
       axisLabel: { color: '#475569', formatter: '{value} MW' },
     },
@@ -65,7 +64,12 @@ export const LevelBreakdownChart: React.FC<LevelBreakdownChartProps> = ({ data }
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+    <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+      <div className="mb-3">
+        <h3 className="text-base font-bold text-slate-900">
+          Error by Generation Level
+        </h3>
+      </div>
       <ReactECharts option={option} style={{ height: '340px', width: '100%' }} notMerge />
     </div>
   );

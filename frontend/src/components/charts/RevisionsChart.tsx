@@ -52,26 +52,19 @@ export const RevisionsChart: React.FC<RevisionsChartProps> = ({
   });
 
   const option = {
-    title: {
-      text: `Forecast Evolution & Revisions (${deliveryDate})`,
-      subtext: 'Revisions across publications showing forecast adjustments over lead time.',
-      left: 10,
-      textStyle: { fontSize: 14, fontWeight: 'bold', color: '#0f172a' },
-      subtextStyle: { fontSize: 12, color: '#64748b' },
-    },
     tooltip: {
       trigger: 'axis',
     },
     legend: {
       type: 'scroll',
-      top: 35,
-      right: 20,
+      bottom: 0,
+      left: 'center',
     },
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '8%',
-      top: '20%',
+      bottom: '45px',
+      top: '30px',
       containLabel: true,
     },
     xAxis: {
@@ -83,7 +76,13 @@ export const RevisionsChart: React.FC<RevisionsChartProps> = ({
     },
     yAxis: {
       type: 'value',
-      name: 'Generation (MW)',
+      name: 'MW',
+      nameTextStyle: {
+        color: '#64748b',
+        fontSize: 12,
+        align: 'right',
+        padding: [0, 8, 0, 0],
+      },
       splitLine: { lineStyle: { color: '#f1f5f9' } },
       axisLabel: { color: '#475569', formatter: '{value} MW' },
     },
@@ -91,8 +90,13 @@ export const RevisionsChart: React.FC<RevisionsChartProps> = ({
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mt-6">
-      <ReactECharts option={option} style={{ height: '360px', width: '100%' }} notMerge />
+    <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200 mt-6">
+      <div className="mb-2">
+        <h3 className="text-base font-bold text-slate-900">
+          Forecast Evolution & Revisions ({deliveryDate})
+        </h3>
+      </div>
+      <ReactECharts option={option} style={{ height: '380px', width: '100%' }} notMerge />
     </div>
   );
 };

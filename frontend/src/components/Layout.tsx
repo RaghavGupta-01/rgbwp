@@ -33,8 +33,6 @@ export const Layout: React.FC<LayoutProps> = ({
                 </h1>
                 <p className="text-xs text-slate-500 mt-1 flex items-center space-x-1">
                   <span>Day-Ahead Decision Desk</span>
-                  <span>•</span>
-                  <span className="text-slate-600 font-medium">Elexon BMRS (GB National Wind)</span>
                 </p>
               </div>
             </div>
@@ -112,7 +110,7 @@ export const Layout: React.FC<LayoutProps> = ({
 
       {/* Footer */}
       <footer className="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
-        <p>GB Wind Forecast Decision Portal • Sourced exclusively from Elexon BMRS (FUELHH & WINDFOR streams)</p>
+        <p>GB Wind Forecast Decision Portal</p>
       </footer>
     </div>
   );

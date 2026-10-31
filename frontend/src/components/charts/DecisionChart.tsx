@@ -4,13 +4,12 @@ import type { ForecastHourPoint } from '../../types/api';
 
 interface DecisionChartProps {
   points: ForecastHourPoint[];
-  cutoffTime: string;
+  cutoffTime?: string;
   deliveryDate: string;
 }
 
 export const DecisionChart: React.FC<DecisionChartProps> = ({
   points,
-  cutoffTime,
   deliveryDate,
 }) => {
   const hours = points.map((p) => {
@@ -29,13 +28,6 @@ export const DecisionChart: React.FC<DecisionChartProps> = ({
   });
 
   const option = {
-    title: {
-      text: `Decision-Time Wind Forecast vs Actuals (${deliveryDate})`,
-      subtext: `Cutoff: ${cutoffTime} UK on D-1. Shaded area represents empirical P10-P90 uncertainty band.`,
-      left: 10,
-      textStyle: { fontSize: 15, fontWeight: 'bold', color: '#0f172a' },
-      subtextStyle: { fontSize: 12, color: '#64748b' },
-    },
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'cross' },
@@ -54,14 +46,14 @@ export const DecisionChart: React.FC<DecisionChartProps> = ({
     },
     legend: {
       data: ['Decision Forecast', 'Outturn Actuals', 'P10-P90 Uncertainty Band'],
-      top: 35,
-      right: 20,
+      top: 0,
+      right: 10,
     },
     grid: {
       left: '3%',
       right: '4%',
       bottom: '8%',
-      top: '18%',
+      top: '45px',
       containLabel: true,
     },
     xAxis: {
@@ -74,7 +66,13 @@ export const DecisionChart: React.FC<DecisionChartProps> = ({
     },
     yAxis: {
       type: 'value',
-      name: 'Generation (MW)',
+      name: 'MW',
+      nameTextStyle: {
+        color: '#64748b',
+        fontSize: 12,
+        align: 'right',
+        padding: [0, 8, 0, 0],
+      },
       axisLine: { lineStyle: { color: '#94a3b8' } },
       splitLine: { lineStyle: { color: '#f1f5f9' } },
       axisLabel: { color: '#475569', formatter: '{value} MW' },
@@ -134,8 +132,13 @@ export const DecisionChart: React.FC<DecisionChartProps> = ({
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-      <ReactECharts option={option} style={{ height: '420px', width: '100%' }} notMerge />
+    <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+      <div className="mb-3">
+        <h3 className="text-base font-bold text-slate-900">
+          Decision-Time Wind Forecast vs Actuals ({deliveryDate})
+        </h3>
+      </div>
+      <ReactECharts option={option} style={{ height: '400px', width: '100%' }} notMerge />
     </div>
   );
 };

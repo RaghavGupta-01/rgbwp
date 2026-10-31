@@ -35,13 +35,6 @@ export const ErrorHistogram: React.FC<ErrorHistogramProps> = ({
   const counts = Object.values(binCounts);
 
   const option = {
-    title: {
-      text: 'Signed Error Distribution (Forecast − Actual)',
-      subtext: `Empirical bounds: P10 = ${signedP10.toLocaleString()} MW (under), P90 = ${signedP90.toLocaleString()} MW (over).`,
-      left: 10,
-      textStyle: { fontSize: 14, fontWeight: 'bold', color: '#0f172a' },
-      subtextStyle: { fontSize: 12, color: '#64748b' },
-    },
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'shadow' },
@@ -51,7 +44,7 @@ export const ErrorHistogram: React.FC<ErrorHistogramProps> = ({
       left: '3%',
       right: '4%',
       bottom: '12%',
-      top: '20%',
+      top: '25px',
       containLabel: true,
     },
     xAxis: {
@@ -84,7 +77,15 @@ export const ErrorHistogram: React.FC<ErrorHistogramProps> = ({
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+    <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-3">
+        <h3 className="text-base font-bold text-slate-900">
+          Signed Error Distribution (Forecast − Actual)
+        </h3>
+        <div className="text-xs text-slate-500 font-medium">
+          P10: <span className="font-semibold text-slate-700">{signedP10.toLocaleString()} MW</span> | P90: <span className="font-semibold text-slate-700">+{signedP90.toLocaleString()} MW</span>
+        </div>
+      </div>
       <ReactECharts option={option} style={{ height: '340px', width: '100%' }} notMerge />
     </div>
   );

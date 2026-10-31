@@ -12,13 +12,6 @@ export const DailyErrorChart: React.FC<DailyErrorChartProps> = ({ data }) => {
   const biases = data.map((d) => d.bias);
 
   const option = {
-    title: {
-      text: 'Daily Forecast Accuracy (MAE & Bias)',
-      subtext: 'Tracking day-to-day error magnitude and directional procurement bias (MW).',
-      left: 10,
-      textStyle: { fontSize: 14, fontWeight: 'bold', color: '#0f172a' },
-      subtextStyle: { fontSize: 12, color: '#64748b' },
-    },
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'shadow' },
@@ -36,14 +29,14 @@ export const DailyErrorChart: React.FC<DailyErrorChartProps> = ({ data }) => {
     },
     legend: {
       data: ['Daily MAE', 'Signed Bias (Forecast - Actual)'],
-      top: 35,
-      right: 20,
+      top: 0,
+      right: 10,
     },
     grid: {
       left: '3%',
       right: '4%',
       bottom: '8%',
-      top: '20%',
+      top: '40px',
       containLabel: true,
     },
     xAxis: {
@@ -54,7 +47,13 @@ export const DailyErrorChart: React.FC<DailyErrorChartProps> = ({ data }) => {
     },
     yAxis: {
       type: 'value',
-      name: 'Error (MW)',
+      name: 'MW',
+      nameTextStyle: {
+        color: '#64748b',
+        fontSize: 12,
+        align: 'right',
+        padding: [0, 8, 0, 0],
+      },
       splitLine: { lineStyle: { color: '#f1f5f9' } },
       axisLabel: { color: '#475569', formatter: '{value} MW' },
     },
@@ -79,8 +78,13 @@ export const DailyErrorChart: React.FC<DailyErrorChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-      <ReactECharts option={option} style={{ height: '360px', width: '100%' }} notMerge />
+    <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+      <div className="mb-3">
+        <h3 className="text-base font-bold text-slate-900">
+          Daily Forecast Accuracy (MAE & Bias)
+        </h3>
+      </div>
+      <ReactECharts option={option} style={{ height: '350px', width: '100%' }} notMerge />
     </div>
   );
 };

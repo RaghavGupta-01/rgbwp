@@ -14,13 +14,6 @@ export const HourOfDayChart: React.FC<HourOfDayChartProps> = ({ data }) => {
   const biases = sorted.map((d) => d.bias);
 
   const option = {
-    title: {
-      text: 'Error & Bias by Hour of Day',
-      subtext: 'Intraday profile of forecast error and directional bias across 24 delivery hours.',
-      left: 10,
-      textStyle: { fontSize: 14, fontWeight: 'bold', color: '#0f172a' },
-      subtextStyle: { fontSize: 12, color: '#64748b' },
-    },
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'shadow' },
@@ -41,14 +34,14 @@ export const HourOfDayChart: React.FC<HourOfDayChartProps> = ({ data }) => {
     },
     legend: {
       data: ['MAE', 'Bias (Forecast − Actual)'],
-      top: 35,
-      right: 20,
+      top: 0,
+      right: 10,
     },
     grid: {
       left: '3%',
       right: '4%',
       bottom: '8%',
-      top: '20%',
+      top: '40px',
       containLabel: true,
     },
     xAxis: {
@@ -88,7 +81,12 @@ export const HourOfDayChart: React.FC<HourOfDayChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+    <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+      <div className="mb-3">
+        <h3 className="text-base font-bold text-slate-900">
+          Error & Bias by Hour of Day
+        </h3>
+      </div>
       <ReactECharts option={option} style={{ height: '340px', width: '100%' }} notMerge />
     </div>
   );
