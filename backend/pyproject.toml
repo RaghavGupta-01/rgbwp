@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "wind-forecast-portal-backend"
 version = "0.1.0"
@@ -36,3 +40,6 @@ pythonpath = ["."]
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
+
+[tool.setuptools.packages.find]
+include = ["app*", "ingestion*"]
